@@ -78,9 +78,13 @@ class PageService implements SingletonInterface
         if (null === $pageUid) {
             $pageUid = $GLOBALS['TSFE']->id;
         }
-        /** @var RootlineUtility $rootLineUtility */
-        $rootLineUtility = GeneralUtility::makeInstance(RootlineUtility::class, $pageUid);
-        $rootline = $rootLineUtility->get();
+        try {
+            /** @var RootlineUtility $rootLineUtility */
+            $rootLineUtility = GeneralUtility::makeInstance(RootlineUtility::class, $pageUid);
+            $rootline = $rootLineUtility->get();
+        } catch (PageNotFoundException $e) {
+            return [];
+        }
         if ($reverse) {
             $rootline = array_reverse($rootline);
         }
